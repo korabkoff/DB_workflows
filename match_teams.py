@@ -52,49 +52,43 @@ def get_team_score(team_id):
 
 
 # get sorted list of teams by score
-def get_sorted_list_of_teams_score(teams, players):
+def get_sorted_list_of_teams_score(teams_filepath, players_scores):
 
-    with open(players, 'r') as players_data:
+    teams_id_n_score = dict()
 
-        players_scores = []
+    with open(teams_filepath,'r') as teams_data:
+        for team in teams_data:
 
-        for line in players_data:
+            team = team.split()
+            # print('team: ' + str(team))
 
-            player_data = players_data.readline()
+            team_id = team[0]
+            # print('team_id: ' + str(team_id))
 
-            player_id = player_data.split()[0]
-
-            player_score = player_data.split()[1]
-
-            players_scores[int(player_id)] = int(player_score)
-
-            print('player_score: '+ player_score)
-
-            print('players_scores: ' + players_scores[:10])
-
-        teams_score = {}
-
-    with open(teams,'r') as teams_data:
-        for line in teams_data:
-            team = teams_data.readline()
-            team = [x.strip() for x in content]
-            team_id = team.split()[1]
-            team_players = team.split()[1:]
-
-            team_score = None
-
+            team_players = team[1:]
+            # print('team_players: ' + str(team_players))
+            team_score = 0
             for player in team_players:
 
-                player_score = players_scores.get([player])
+                player_score = players_scores[int(player)]
+                # print('player_score: ' + str(player_score))
+
                 team_score += int(player_score)
 
-            teams_score[team_id] = team_score
-            print('teams_score: '+ str(teams_score))
+                teams_id_n_score[int(team_id)] = team_score
 
-    return sorted(teams_score, key=lambda x: x[1])
+            # print('teams_score: '+ str(team_score))
+
+    return sorted(teams_id_n_score.items(), key=lambda team_score: team_score[1])
 
 
 # return teams pairwise starting from first
+    def return_pairwise(sorted_by_score):
+        for index in len(sorted_by_score):
+            if index%2:
+
+        return sorted_by_score[0][0],sorted_by_score[1][0]
+
 
 # make dict of Players scores to efficient serch in it
 def make_players_scores_dict(players_filepath):
@@ -116,7 +110,7 @@ def make_players_scores_dict(players_filepath):
             # print('players_scores: ' + str(players_scores))
             # print('\n')
 
-        print('players_scores: ' + str(players_scores[:10]))
+        # print('players_scores: ' + str(players_scores[:10]))
     return players_scores
     # return player_id
 
@@ -143,7 +137,7 @@ if __name__ == '__main__':
     # print('team_ids: ' + str(team_ids))
     players_scores_dict = make_players_scores_dict(directory +'/'+'players.txt')
 
-    print(players_scores_dict[:10])
-    # sorted_by_score = get_sorted_list_of_teams_score(directory +'/'+'teams.txt', directory +'/'+'players.txt')
-    # print(sorted_by_score[:20])
+    # print('players_scores: ' + str(players_scores_dict[:10]))
+    sorted_by_score = get_sorted_list_of_teams_score(directory +'/'+'teams.txt', players_scores_dict)
+    print(sorted_by_score[:10])
     print(time.time() - start_time)
